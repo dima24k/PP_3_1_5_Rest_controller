@@ -27,6 +27,9 @@ public class User {
     @Column(name = "username")
     private String userName;
 
+    @Column(name = "role")
+    private String role;
+
     public User(String userName, int age, String email) {
         this.userName = userName;
         this.age = age;
@@ -73,6 +76,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     @Override
