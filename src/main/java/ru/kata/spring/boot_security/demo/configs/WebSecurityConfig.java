@@ -14,13 +14,17 @@ import ru.kata.spring.boot_security.demo.services.UserDetailsServiceImpl;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
     private final UserDetailsServiceImpl userDetailsServiceImpl;
+    private final SuccessUserHandler successUserHandler;
 
     @Autowired
-    public WebSecurityConfig(UserDetailsServiceImpl userDetailsServiceImpl) {
+    public WebSecurityConfig(UserDetailsServiceImpl userDetailsServiceImpl, SuccessUserHandler successUserHandler) {
         this.userDetailsServiceImpl = userDetailsServiceImpl;
+        this.successUserHandler = successUserHandler;
     }
 
+    @Override
     protected void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder.userDetailsService(userDetailsServiceImpl);
     }
@@ -29,21 +33,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/user").authenticated()
-                .anyRequest().permitAll()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/admin").hasRole("ADMIN")
+                .antMatchers("/user").hasAnyRole("USER", "ADMIN")
+                .anyRequest().hasAnyRole("ADMIN")
                 .and()
                 .formLogin()
+                .successHandler(successUserHandler)
                 .usernameParameter("username")
                 .passwordParameter("password")
-                .defaultSuccessUrl("/user", true)
-                .permitAll()
                 .and()
                 .logout()
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
                 .permitAll();
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {

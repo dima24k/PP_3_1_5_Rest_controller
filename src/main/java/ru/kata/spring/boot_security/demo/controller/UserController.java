@@ -6,19 +6,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
-import ru.kata.spring.boot_security.demo.services.UserService;
 
 import java.security.Principal;
-import java.util.Optional;
 
 @Controller
 public class UserController {
-    private final UserService userService;
     private final UserRepository userRepository;
 
     @Autowired
-    public UserController(UserService userService, UserRepository userRepository) {
-        this.userService = userService;
+    public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -29,3 +25,4 @@ public class UserController {
         return "show";
     }
 }
+
