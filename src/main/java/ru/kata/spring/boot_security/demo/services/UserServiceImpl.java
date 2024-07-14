@@ -1,22 +1,30 @@
 package ru.kata.spring.boot_security.demo.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
+import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
+import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
+    private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao) {
+    public UserServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
         this.userDao = userDao;
+        this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -38,7 +46,20 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void newUser(User user) {
-        user.setRole("ROLE_USER");
+        String encodePassword = passwordEncoder.encode(user.getPassword() );
+        user.setPassword(encodePassword);
+
+        Optional<Role> role = roleRepository.findRoleByName("ROLE_USER");
+
+        if (role.isPresent() ) {
+            user.getRoles().add(role.get() );
+        } else {
+            Role newRole = new Role();
+            newRole.setName("ROLE_USER");
+            roleRepository.save(newRole);
+            user.getRoles().add(newRole);
+        }
+
         userDao.newUser(user);
     }
 

@@ -3,7 +3,11 @@ package ru.kata.spring.boot_security.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 import ru.kata.spring.boot_security.demo.services.UserService;
@@ -56,6 +60,18 @@ public class AdminController {
     @PostMapping("/update")
     public String updateUserPost(@RequestParam(value="id") Long id, @ModelAttribute User user) {
         userService.updateUser(user, id);
+        return "redirect:/admin/all";
+    }
+
+    @GetMapping("/delete")
+    public String deleteUserGet(@RequestParam(value = "id") Long id, Model model) {
+        model.addAttribute("id", id);
+        return "delete";
+    }
+
+    @PostMapping("/delete")
+    public String deleteUserPost(@RequestParam(value="id") Long id) {
+        userService.deleteUser(id);
         return "redirect:/admin/all";
     }
 }
