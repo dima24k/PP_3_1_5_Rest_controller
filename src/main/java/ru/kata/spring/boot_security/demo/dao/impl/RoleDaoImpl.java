@@ -1,6 +1,7 @@
-package ru.kata.spring.boot_security.demo.dao;
+package ru.kata.spring.boot_security.demo.dao.impl;
 
 import org.springframework.stereotype.Repository;
+import ru.kata.spring.boot_security.demo.dao.RoleDao;
 import ru.kata.spring.boot_security.demo.models.Role;
 
 import javax.persistence.EntityManager;
@@ -8,7 +9,7 @@ import javax.persistence.PersistenceContext;
 import java.util.Optional;
 
 @Repository
-public class RoleDaoImpl implements RoleDao{
+public class RoleDaoImpl implements RoleDao {
     @PersistenceContext
     private EntityManager entityManager;
 
