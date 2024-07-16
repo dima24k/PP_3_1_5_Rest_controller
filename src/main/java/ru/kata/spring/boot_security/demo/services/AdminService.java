@@ -1,15 +1,12 @@
-package ru.kata.spring.boot_security.demo.dao;
+package ru.kata.spring.boot_security.demo.services;
 
-import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface UserDao {
+public interface AdminService {
     Optional<User> findByUserName(String username);
-
-    Optional<Role> findRoleByName(String name);
 
     User getUserById(Long id);
 
@@ -17,7 +14,7 @@ public interface UserDao {
 
     void newUser(User user);
 
-    void updateUser(User user,Long id);
+    void updateUser(User user, Long id);
 
     void deleteUser(Long id);
 }
