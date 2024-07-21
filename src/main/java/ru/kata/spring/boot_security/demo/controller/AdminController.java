@@ -28,11 +28,7 @@ public class AdminController {
                 .orElseThrow( () -> new NoSuchElementException("User not found") );
 
         model.addAttribute("admin", user);
-        return "admin";
-    }
-
-    @GetMapping("/all")
-    public String getAllUsers(Model model) {
+        model.addAttribute("roles", user.getRolesName() );
         model.addAttribute("users", userService.getAll() );
         return "all";
     }
@@ -52,7 +48,7 @@ public class AdminController {
     @GetMapping("/update")
     public String updateUserGet(@RequestParam(value = "id") Long id, Model model) {
         model.addAttribute("user", userService.getUserById(id) );
-        return "update";
+        return "admin";
     }
 
     @PostMapping("/update")

@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
@@ -98,6 +99,13 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public String getRolesName() {
+        return roles.stream()
+                .map(Role::getName)
+                .map(role -> role.replaceFirst("ROLE_", " "))
+                .collect(Collectors.joining() );
     }
 
     @Override

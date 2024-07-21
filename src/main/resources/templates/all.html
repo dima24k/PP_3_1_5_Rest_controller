@@ -1,48 +1,55 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>All Users</title>
-    <style>
-        table {
-            width: 50%;
-            margin-right: 50px;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-    </style>
-</head>
-<body>
-<h1 style="color:black; font-size: 24px; font-weight: bold;">All Users</h1>
-<table>
-    <thead>
-    <tr>
-        <th>id</th>
-        <th>age</th>
-        <th>username</th>
-        <th>email</th>
-        <th>password</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="user : ${users}">
-        <td th:text="${user.id}"></td>
-        <td th:text="${user.age}"></td>
-        <td th:text="${user.userName}"></td>
-        <td th:text="${user.email}"></td>
-        <td th:text="${user.password}"></td>
-    </tr>
-    </tbody>
-</table>
-<a href="/logout">Logout</a>
-</body>
-</html>
+<!DOCTYPE html> <html lang="en" xmlns:th="http://www.thymeleaf.org"> <head> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <title>Admin panel</title> <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> <style> .nav-pills { margin-top: 20px; width: 230px; } .tab-content { margin-top: 20px; margin-right: 10px; } .tab-pane { margin-left: -8px; } .table-striped { margin-left: 0.5%; width: 99%; } body { background: linear-gradient(to right, white 12%, #f0f0f0 12%); } </style> </head> <body> <nav class="navbar navbar-dark bg-dark" style="height: 70px;"> <div class="container-fluid"> <p class="navbar-brand text-white"> <span class="align-middle fw-bold" th:text="${admin.email}"></span> <span class="align-middle">with roles:</span> <span class="align-middle" th:text="${roles}"> </span> </p> <form th:action="@{/logout}" method="post"> <button type="submit" class="btn btn-dark text-secondary">Logout</button> </form> </div> </nav> <div class="d-flex align-items-start"> <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical" > <button class="nav-link" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="false" style="text-align: left;">Admin</button> <button class="nav-link active" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile" aria-selected="true" style="text-align: left;">User</button> </div>
+
+    <div class="tab-content col" id="v-pills-tabContent">
+        <div class="tab-pane fade card" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab" tabindex="0">
+            <h1 style="margin-left: 10px;">User information-page</h1>
+            <h5 class="card-header">About user</h5>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Roles</th>
+                    <th>Password</th>
+                </tr>
+                </thead>
+                <tbody id="oneUserBody">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-pane fade card show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab" tabindex="0">
+            <h1 style="margin-left: 10px;">User information-page</h1>
+            <h5 class="card-header">All users</h5>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>username</th>
+                    <th>age</th>
+                    <th>email</th>
+                    <th>roles</th>
+                    <th>edit</th>
+                    <th>delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}">
+                    <th th:text="${user.id}"></th>
+                    <th th:text="${user.userName}"></th>
+                    <th th:text="${user.age}"></th>
+                    <th th:text="${user.email}"></th>
+                    <th th:text="${user.getRolesName()}"></th>
+                    <td>
+                        <button class="btn btn-info btn-edit" data-th-id="${user.id}" data-bs-toggle="modal" data-bs-target="#editUser">edit</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-danger btn-delete" data-th-id="${user.id}" data-bs-toggle="modal" data-bs-target="#deleteUser">delete</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div> <div class="modal fade" id="editUser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <h1 class="modal-title fs-5" id="editModalLabel">Edit user</h1> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> </div> <div class="modal-body"> <label for="editId"><b>ID</b></label> <input class="form-control" id="editId" name="id" readonly="readonly"/> <br> <label for="editName"><b>Name</b></label> <input class="form-control" id="editName" name="name" required/> <br> <label for="editAge"><b>Age</b></label> <input class="form-control" id="editAge" name="age" required/> <br> <label for="editPassword"><b>Password</b></label> <input class="form-control" id="editPassword" name="password" required/> <br> <label for="editRoles"><b>Role</b></label> <select multiple class="form-control form-control-sm" id="editRoles" name="editRoles" size="2"> </select> <br><br> </div> <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> <button type="button" class="btn btn-primary">Save changes</button> </div> </div> </div> </div> <div class="modal fade" id="deleteUser" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"> <div class="modal-dialog"> <div class="modal-content"> <div class="modal-header"> <h1 class="modal-title fs-5" id="deleteModalLabel">Delete user</h1> <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> </div> <div class="modal-body"> <label for="idDel"><b>Id</b></label> <input disabled class="form-control" id="idDel" required/> <br> <label for="nameDel"><b>Name</b></label> <input disabled class="form-control" id="nameDel" required/> <br> <label for="ageDel"><b>Age</b></label> <input disabled class="form-control" id="ageDel" required/> <br> <label for="passwordDel"><b>Password</b></label> <input disabled class="form-control" id="passwordDel"/> <br> <label for="rolesDel"><b>Role</b></label> <select multiple class="form-control form-control-sm" id="rolesDel" name="role" size="2" disabled> <option id="rolesDel2" value="1">USER</option> <option id="rolesDel1" value="2">ADMIN</option> </select> <br><br> </div> <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> <button type="button" class="btn btn-primary">Save changes</button> </div> </div> </div> </div> <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> </body> </html>
