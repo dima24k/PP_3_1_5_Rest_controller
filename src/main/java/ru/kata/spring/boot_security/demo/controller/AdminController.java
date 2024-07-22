@@ -2,11 +2,7 @@ package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.services.UserService;
 
@@ -28,44 +24,27 @@ public class AdminController {
                 .orElseThrow( () -> new NoSuchElementException("User not found") );
 
         model.addAttribute("admin", user);
-        model.addAttribute("roles", user.getRolesName() );
+        model.addAttribute("roles", user.getRoles() );
         model.addAttribute("users", userService.getAll() );
-        return "all";
-    }
-
-    @GetMapping("/new")
-    public String newUser(Model model) {
-        model.addAttribute("user", new User() );
         return "admin";
     }
 
-    @PostMapping("/new")
+    @PostMapping()
     public String createUser(@ModelAttribute("user") User user) {
         userService.newUser(user);
-        return "redirect:/admin/all";
+        return "redirect:/admin";
     }
 
-    @GetMapping("/update")
-    public String updateUserGet(@RequestParam(value = "id") Long id, Model model) {
-        model.addAttribute("user", userService.getUserById(id) );
-        return "admin";
-    }
-
-    @PostMapping("/update")
-    public String updateUserPost(@RequestParam(value="id") Long id, @ModelAttribute User user) {
+    @PatchMapping("/{id}")
+    public String update(@ModelAttribute("user") User user,
+                         @PathVariable("id") Long id) {
         userService.updateUser(user, id);
-        return "redirect:/admin/all";
+        return "redirect:/admin";
     }
 
-    @GetMapping("/delete")
-    public String deleteUserGet(@RequestParam(value = "id") Long id, Model model) {
-        model.addAttribute("id", id);
-        return "admin";
-    }
-
-    @PostMapping("/delete")
-    public String deleteUserPost(@RequestParam(value="id") Long id) {
+    @DeleteMapping("/{id}")
+    public String delete(@PathVariable("id") Long id) {
         userService.deleteUser(id);
-        return "redirect:/admin/all";
+        return "redirect:/admin";
     }
 }

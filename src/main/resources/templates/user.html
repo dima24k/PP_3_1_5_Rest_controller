@@ -13,7 +13,8 @@
         }
         .tab-content {
             margin-top: 20px; /* увеличиваем отсуп колонки панели на 20 px */
-            margin-right: 10px;
+            margin-right: 20px;
+            margin-left: 12px;
 
         }
         .tab-pane {
@@ -52,28 +53,28 @@
         <h1 style="margin-left: 10px;">User information-page</h1>
         <div class="tab-pane fade card show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab" tabindex="0">
             <h5 class="card-header">About user</h5>
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>id</th>
-                    <th>username</th>
-                    <th>age</th>
-                    <th>email</th>
-                    <th>roles</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <th th:text="${user.id}"></th>
-                    <th th:text="${user.userName}"></th>
-                    <th th:text="${user.age}"></th>
-                    <th th:text="${user.email}"></th>
-                    <th th:text="${roles}"></th>
-                </tr>
-                </tbody>
-            </table>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>username</th>
+                        <th>age</th>
+                        <th>email</th>
+                        <th>roles</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th th:text="${user.id}"></th>
+                        <th th:text="${user.userName}"></th>
+                        <th th:text="${user.age}"></th>
+                        <th th:text="${user.email}"></th>
+                        <th th:text="${roles}"></th>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
