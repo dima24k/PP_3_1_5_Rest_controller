@@ -36,7 +36,7 @@ public class AdminController {
     @GetMapping("/new")
     public String newUser(Model model) {
         model.addAttribute("user", new User() );
-        return "new";
+        return "admin";
     }
 
     @PostMapping("/new")
@@ -60,7 +60,7 @@ public class AdminController {
     @GetMapping("/delete")
     public String deleteUserGet(@RequestParam(value = "id") Long id, Model model) {
         model.addAttribute("id", id);
-        return "delete";
+        return "admin";
     }
 
     @PostMapping("/delete")
