@@ -25,4 +25,17 @@ public class RoleDaoImpl implements RoleDao {
         }
         return Optional.ofNullable(role);
     }
+
+    @Override
+    public Optional<Role> findRoleById(long id) {
+        Role role = null;
+        try {
+            role = (Role) entityManager.createQuery("SELECT r FROM Role r WHERE r.id = :id")
+                    .setParameter("id", id)
+                    .getSingleResult();
+        } catch (Exception e) {
+            // handle exception
+        }
+        return Optional.ofNullable(role);
+    }
 }

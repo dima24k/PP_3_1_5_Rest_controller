@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface RoleDao {
     Optional<Role> findRoleByName(String name);
+    Optional<Role> findRoleById(long id);
 }

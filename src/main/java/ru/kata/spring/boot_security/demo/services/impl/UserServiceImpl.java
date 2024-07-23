@@ -26,6 +26,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<Role> getRoles() {
+        return userDao.getRoles();
+    }
+
+    @Override
     public Optional<User> findByUserName(String username) {
         return userDao.findByUserName(username);
     }
@@ -67,6 +72,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void updateUser(User user, Long id) {
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         userDao.updateUser(user, id);
     }
 }

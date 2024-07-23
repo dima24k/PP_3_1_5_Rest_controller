@@ -1,7 +1,9 @@
 package ru.kata.spring.boot_security.demo.dao.impl;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
+import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 
 import javax.persistence.EntityManager;
@@ -46,14 +48,18 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void updateUser(User user, Long id) {
-        Query query = entityManager.createQuery("UPDATE User u SET u.userName = :name, u.age = :age, u.email = :email WHERE u.id = :id");
+        // Используйте "MERGE" чтобы обновить всё в одной транзакции
+        User existingUser = entityManager.find(User.class, id);
+        if (existingUser != null) {
+            existingUser.setUserName(user.getUserName());
+            existingUser.setAge(user.getAge());
+            existingUser.setEmail(user.getEmail());
 
-        query.setParameter("name", user.getUserName() );
-        query.setParameter("age", user.getAge() );
-        query.setParameter("email", user.getEmail() );
-        query.setParameter("id", id);
+            // Здесь мы также обновим роли, если они меняются
+            existingUser.setRoles(user.getRoles());
 
-        query.executeUpdate();
+            entityManager.merge(existingUser);
+        }
     }
 
     @Override
@@ -61,5 +67,10 @@ public class UserDaoImpl implements UserDao {
         Query query = entityManager.createQuery("DELETE FROM User u WHERE u.id = :userId");
         query.setParameter("userId", id);
         query.executeUpdate();
+    }
+
+    @Override
+    public List<Role> getRoles() {
+        return entityManager.createQuery("select r from Role r", Role.class).getResultList();
     }
 }
