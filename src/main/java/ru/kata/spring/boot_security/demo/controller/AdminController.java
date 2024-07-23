@@ -2,14 +2,7 @@ package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import ru.kata.spring.boot_security.demo.models.Role;
+import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.services.RoleService;
 import ru.kata.spring.boot_security.demo.services.UserService;
@@ -17,7 +10,6 @@ import ru.kata.spring.boot_security.demo.services.UserService;
 import java.security.Principal;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -51,17 +43,11 @@ public class AdminController {
     public String update(@ModelAttribute("user") User user,
                          @PathVariable("id") Long id,
                          @RequestParam("roleIds") List<Long> roleIds) {
-        List<Role> roles = roleIds.stream()
-                .map(roleId -> roleService.findRoleById(roleId)
-                        .orElseThrow(() -> new IllegalArgumentException("Invalid role Id:" + roleId)))
-                .collect(Collectors.toList());
-        user.setRoles(roles);
-
-        userService.updateUser(user, id);
+        userService.updateUser(user, id, roleIds);
         return "redirect:/admin";
     }
 
-    @DeleteMapping("/{id}")
+    @PostMapping("/admin/{id}")
     public String delete(@PathVariable("id") Long id) {
         userService.deleteUser(id);
         return "redirect:/admin";

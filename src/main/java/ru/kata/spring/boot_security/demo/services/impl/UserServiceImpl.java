@@ -11,6 +11,7 @@ import ru.kata.spring.boot_security.demo.services.UserService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @Service
@@ -71,10 +72,13 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void updateUser(User user, Long id) {
-        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-        }
+    public void updateUser(User user, Long id, List<Long> roleIds) {
+        List<Role> roles = roleIds.stream()
+                .map(roleId -> roleDao.findRoleById(roleId)
+                        .orElseThrow(() -> new IllegalArgumentException("Invalid role Id:" + roleId)))
+                .collect(Collectors.toList());
+        user.setRoles(roles);
+
         userDao.updateUser(user, id);
     }
 }

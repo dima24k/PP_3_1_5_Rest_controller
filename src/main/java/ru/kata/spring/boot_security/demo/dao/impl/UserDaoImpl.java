@@ -1,6 +1,5 @@
 package ru.kata.spring.boot_security.demo.dao.impl;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.models.Role;
@@ -48,16 +47,14 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void updateUser(User user, Long id) {
-        // Используйте "MERGE" чтобы обновить всё в одной транзакции
+        // Используем "MERGE" чтобы обновить всё в одной транзакции
         User existingUser = entityManager.find(User.class, id);
         if (existingUser != null) {
-            existingUser.setUserName(user.getUserName());
-            existingUser.setAge(user.getAge());
-            existingUser.setEmail(user.getEmail());
-
-            // Здесь мы также обновим роли, если они меняются
-            existingUser.setRoles(user.getRoles());
-
+            existingUser.setUserName(user.getUserName() );
+            existingUser.setAge(user.getAge() );
+            existingUser.setEmail(user.getEmail() );
+            existingUser.setRoles(user.getRoles() );
+            existingUser.setPassword(user.getPassword() );// Обновление ролей
             entityManager.merge(existingUser);
         }
     }
