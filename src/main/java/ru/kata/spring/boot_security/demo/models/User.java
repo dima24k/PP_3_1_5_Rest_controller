@@ -43,10 +43,13 @@ public class User {
     )
     private List<Role> roles = new ArrayList<>();
 
-    public User(String userName, int age, String email) {
+    public User(String userName, int age, String email, Collection<String> roles) {
         this.userName = userName;
         this.age = age;
         this.email = email;
+        this.roles = roles.stream()
+                .map(Role::new) // Передаем roleName в конструктор Role
+                .collect(Collectors.toList());
     }
 
     public User() {}

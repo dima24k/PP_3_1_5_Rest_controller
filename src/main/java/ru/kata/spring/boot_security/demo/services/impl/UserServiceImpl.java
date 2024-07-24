@@ -54,21 +54,19 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void newUser(User user) {
-        String encodePassword = passwordEncoder.encode(user.getPassword() );
+    public void newUser(User user, List<Long> roleIds) {
+        String encodePassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodePassword);
 
-        Optional<Role> role = roleDao.findRoleByName("ROLE_USER");
+        List<Role> roles = roleIds.stream()
+                .map(roleId -> roleDao.findRoleById(roleId)
+                        .orElseThrow(() -> new IllegalArgumentException("Invalid role Id:" + roleId)))
+                .collect(Collectors.toList());
+        user.setRoles(roles);
 
-        if (role.isPresent() ) {
-            user.getRoles().add(role.get() );
-        } else {
-            Role newRole = new Role();
-            newRole.setName("ROLE_USER");
-            user.getRoles().add(newRole);
-        }
         userDao.newUser(user);
     }
+
 
     @Transactional
     @Override

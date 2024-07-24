@@ -14,7 +14,7 @@ public interface UserService {
 
     List<User> getAll();
 
-    void newUser(User user);
+    void newUser(User user, List<Long> roleIds);
 
     void updateUser(User user, Long id, List<Long> roleIds);
 
