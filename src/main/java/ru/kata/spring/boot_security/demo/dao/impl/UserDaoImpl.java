@@ -47,14 +47,13 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void updateUser(User user, Long id) {
-        // Используем "MERGE" чтобы обновить всё в одной транзакции
         User existingUser = entityManager.find(User.class, id);
         if (existingUser != null) {
             existingUser.setUserName(user.getUserName() );
             existingUser.setAge(user.getAge() );
             existingUser.setEmail(user.getEmail() );
             existingUser.setRoles(user.getRoles() );
-            existingUser.setPassword(user.getPassword() );// Обновление ролей
+            existingUser.setPassword(user.getPassword() );
             entityManager.merge(existingUser);
         }
     }

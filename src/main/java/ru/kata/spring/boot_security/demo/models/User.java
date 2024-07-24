@@ -11,7 +11,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Entity
@@ -48,7 +51,7 @@ public class User {
         this.age = age;
         this.email = email;
         this.roles = roles.stream()
-                .map(Role::new) // Передаем roleName в конструктор Role
+                .map(Role::new)
                 .collect(Collectors.toList());
     }
 
