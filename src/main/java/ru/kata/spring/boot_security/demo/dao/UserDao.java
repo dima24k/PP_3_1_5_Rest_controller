@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface UserDao {
     Optional<User> findByUserName(String username);
 
-    User getUserById(Long id);
+    User findById(Long id);
 
     List<User> getAll();
 

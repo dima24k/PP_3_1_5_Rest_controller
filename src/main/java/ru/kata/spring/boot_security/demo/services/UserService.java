@@ -7,16 +7,17 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    List<Role> getRoles();
     Optional<User> findByUserName(String username);
 
-    User getUserById(Long id);
+    User findById(Long id);
 
     List<User> getAll();
 
-    void newUser(User user, List<Long> roleIds);
+    void newUser(User user);
 
-    void updateUser(User user, Long id, List<Long> roleIds);
+    void updateUser(User user, Long id);
 
     void deleteUser(Long id);
+
+    List<Role> getRoles();
 }

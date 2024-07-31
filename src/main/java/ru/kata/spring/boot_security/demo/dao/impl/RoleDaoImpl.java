@@ -14,19 +14,6 @@ public class RoleDaoImpl implements RoleDao {
     private EntityManager entityManager;
 
     @Override
-    public Optional<Role> findRoleByName(String name) {
-        Role role = null;
-        try {
-            role = (Role) entityManager.createQuery("SELECT r FROM Role r WHERE r.name = :name")
-                    .setParameter("name", name)
-                    .getSingleResult();
-        } catch (Exception e) {
-            // handle exception
-        }
-        return Optional.ofNullable(role);
-    }
-
-    @Override
     public Optional<Role> findRoleById(long id) {
         Role role = null;
         try {

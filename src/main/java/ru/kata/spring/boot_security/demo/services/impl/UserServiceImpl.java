@@ -27,18 +27,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Role> getRoles() {
-        return userDao.getRoles();
-    }
-
-    @Override
     public Optional<User> findByUserName(String username) {
         return userDao.findByUserName(username);
     }
 
     @Override
-    public User getUserById(Long id) {
-        return userDao.getUserById(id);
+    public User findById(Long id) {
+        return userDao.findById(id);
     }
 
     @Override
@@ -48,35 +43,27 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void deleteUser(Long id) {
-        userDao.deleteUser(id);
-    }
-
-    @Transactional
-    @Override
-    public void newUser(User user, List<Long> roleIds) {
-        String encodePassword = passwordEncoder.encode(user.getPassword());
+    public void newUser(User user) {
+        String encodePassword = passwordEncoder.encode(user.getPassword() );
         user.setPassword(encodePassword);
-
-        List<Role> roles = roleIds.stream()
-                .map(roleId -> roleDao.findRoleById(roleId)
-                        .orElseThrow(() -> new IllegalArgumentException("Invalid role Id:" + roleId)))
-                .collect(Collectors.toList());
-        user.setRoles(roles);
 
         userDao.newUser(user);
     }
 
+    @Transactional
+    @Override
+    public void updateUser(User user, Long id) {
+        userDao.updateUser(user, id);
+    }
 
     @Transactional
     @Override
-    public void updateUser(User user, Long id, List<Long> roleIds) {
-        List<Role> roles = roleIds.stream()
-                .map(roleId -> roleDao.findRoleById(roleId)
-                        .orElseThrow(() -> new IllegalArgumentException("Invalid role Id:" + roleId)))
-                .collect(Collectors.toList());
-        user.setRoles(roles);
+    public void deleteUser(Long id) {
+        userDao.deleteUser(id);
+    }
 
-        userDao.updateUser(user, id);
+    @Override
+    public List<Role> getRoles() {
+        return userDao.getRoles();
     }
 }
