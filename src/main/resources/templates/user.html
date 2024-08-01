@@ -35,9 +35,9 @@
     <div class="container-fluid">
         <div class="collapse navbar-collapse show" id="navbarDark">
             <ul class="navbar-nav me-auto mb-2 mb-xl-0">
-                <span class="align-middle font-weight-bold mr-1" th:text="${user.getEmail()}"></span>
+                <span class="align-middle font-weight-bold mr-1" id="headUserName"></span>
                 <span class="align-middle mr-1">with roles:</span>
-                <span class="align-middle" th:each="role : ${user.getRoles()}" th:text="${user.getRolesName()}"></span>
+                <span class="align-middle" id="headUserRoles"></span>
             </ul>
         </div>
         <form th:action="@{/logout}" method="post">
@@ -72,15 +72,7 @@
                                         <th>Role</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td th:text="${user.id}"></td>
-                                        <td th:text="${user.userName}"></td>
-                                        <td th:text="${user.age}"></td>
-                                        <td th:text="${user.email}"></td>
-                                        <td th:text="${user.getRolesName()}"></td>
-                                    </tr>
-                                    </tbody>
+                                    <tbody id="oneUserBody"></tbody>
                                 </table>
                             </div>
                         </div>
@@ -93,3 +85,7 @@
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs"></script>
+<script src="/static/user.js"></script>
+
+</body>
+</html>
