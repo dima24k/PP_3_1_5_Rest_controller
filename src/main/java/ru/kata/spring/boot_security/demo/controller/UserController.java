@@ -19,7 +19,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
+    @GetMapping("/current")
     public ResponseEntity<User> getUser(Principal principal) {
         return ResponseEntity.ok(userService.findByUserName(principal.getName() )
                 .orElseThrow( () -> new NoSuchElementException("User not found") ) );

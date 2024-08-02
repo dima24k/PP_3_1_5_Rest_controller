@@ -1,28 +1,31 @@
-let currentUser = "";
+let currentUser;
 
-fetch("/api/user")
-    .then(response => response.json() )
+fetch("/api/user/current")
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
     .then(data => {
-        currentUser = data
-        console.log(data)
-        showUser(data)
-        document.getElementById('headUserName').innerText = currentUser.name
-        document.getElementById('headUserRoles').innerText = currentUser.listRoles
-            .map(role => role.name).join(" ")
+        currentUser = data;
+        console.log(data);
+        showUser(data); // Уберем лишнюю часть кода из этого места
     })
     .catch(error => {
-        console.error('Пользователь с таким id не был найден' + error)
-    })
+        console.error('Пользователь с таким id не был найден: ' + error);
+    });
 
 function showUser(user) {
-    let temp = "";
+    const roles = user.listRoles.map(role => role.name).join(" "); // Используем roles
 
-    temp += "<tr>"
-    temp += "<td>" + user.id + "</td>"
-    temp += "<td>" + user.username + "</td>"
-    temp += "<td>" + user.age + "</td>"
-    temp += "<td>" + user.listRoles.map(role => role.name).join(" ") + "</td>"
-    temp += "</tr>"
-
-    document.getElementById('oneUserBody').innerHTML = temp
+    document.getElementById('oneUserBody').innerHTML = `
+        <tr>
+            <td>${}</td>
+            <td>${}</td> <!-- Убедитесь, что это правильное свойство -->
+            <td>${}</td>
+            <td>${}</td> <!-- Убедитесь, что это правильное свойство -->
+            <td>${}</td> <!-- Используем roles -->
+        </tr>
+    `;
 }
