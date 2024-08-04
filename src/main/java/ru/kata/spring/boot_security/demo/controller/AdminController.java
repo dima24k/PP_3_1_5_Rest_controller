@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +10,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
+import ru.kata.spring.boot_security.demo.services.RoleService;
 import ru.kata.spring.boot_security.demo.services.UserService;
 
 import java.security.Principal;
@@ -21,7 +24,7 @@ import java.util.NoSuchElementException;
 public class AdminController {
     private final UserService userService;
 
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
     }
 
@@ -31,23 +34,34 @@ public class AdminController {
                 .orElseThrow( () -> new NoSuchElementException("User not found") ) );
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<User> showUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.findById(id) );
+    }
+
     @GetMapping
     public ResponseEntity<List<User> > getUsers() {
         return ResponseEntity.ok(userService.getAll() );
     }
 
+    @GetMapping("/roles")
+    public ResponseEntity<List<Role> > roles() {
+        return ResponseEntity.ok(userService.getRoles() );
+    }
+
     @PostMapping("/add")
-    public void createUser(@RequestBody User user) {
+    public ResponseEntity<HttpStatus> createUser(@RequestBody User user) {
        userService.newUser(user);
+       return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @PutMapping("/update/{id}")
-    public void update(@RequestBody User user, @PathVariable Long id) {
-        userService.updateUser(user, id);
+    @PutMapping
+    public void update(@RequestBody User user) {
+        userService.updateUser(user, user.getId() );
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void delete(@PathVariable("id") Long id) {
+    @DeleteMapping("{id}")
+    public void delete(@PathVariable Long id) {
         userService.deleteUser(id);
     }
 }
