@@ -96,7 +96,7 @@ function showEditModal(id) {
             'Content-Type': 'application/json',
         },
     });
-    // Получите данные пользователя, чтобы отобразить в модальном окне
+
     fetch(request)
         .then(response => response.json())
         .then(editUser => {
@@ -122,7 +122,7 @@ function showEditModal(id) {
 function newUser(event) {
     event.preventDefault();
 
-    let newUser = new FormData(event.target);
+    let newUserForm = new FormData(event.target);
 
     const selectedRoles = [];
     const selectElement = document.getElementById('roles');
@@ -135,12 +135,14 @@ function newUser(event) {
 
     let user = {
         id: null,
-        name: newUser.get('userName'),
-        age: newUser.get('age'),
-        email: newUser.get('email'),
-        password: newUser.get('password'),
+        userName: newUserForm.get('userName'),
+        age: newUserForm.get('age'),
+        email: newUserForm.get('email'),
+        password: newUserForm.get('password'),
         roles: selectedRoles
     };
+
+    console.log(user);
 
     fetch('api/admin', {
         method: 'POST',
@@ -158,19 +160,17 @@ function newUser(event) {
         .then(() => {
             getAllUsers();
             event.target.reset();
+
+            const triggerE1 = document.querySelector('a[href="#usersTable"]');
+            $(triggerE1).tab('show');
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
         });
-
-    const triggerE1 = document.querySelector('#tableButton');
-    $(triggerE1).tab('show'); // Использование jQuery для показа вкладки
 }
 
 // Обработчик отправки формы
 function editUser(event) {
-
-
     event.preventDefault();
 
     let editUserForm = new FormData(event.target);
@@ -203,17 +203,17 @@ function editUser(event) {
         if (response.ok) {
             event.target.reset();
             getAllUsers();
-            $('#editModal').modal('hide'); // Закрываем модальное окно
+            $('#editModal').modal('hide');
         }
     });
 }
-// Вызов функции получения пользователей при загрузке страницы
+
 getAllUsers();
 
 function showDeleteModal(id) {
     document.getElementById('closeDeleteModal').onclick = function() {
-        $('#deleteModal').modal('hide'); // Закрываем модальное окно
-        document.getElementById('deleteUserForm').reset(); // Сбрасываем форму
+        $('#deleteModal').modal('hide');
+        document.getElementById('deleteUserForm').reset();
     };
 
     let request = new Request("/api/admin/" + id, {
@@ -238,7 +238,6 @@ function showDeleteModal(id) {
         if (roles.includes("ADMIN") ) {
             document.getElementById('rolesDel2').setAttribute('selected', 'true');
         }
-
         $('#deleteModal').modal('show');
     });
 
@@ -256,9 +255,8 @@ function showDeleteModal(id) {
             fetch(request).then(() => {
                 event.target.reset();
                 getAllUsers();
-                $('#deleteModal').modal('hide'); // Закрываем модальное окно
+                $('#deleteModal').modal('hide');
             });
         }
-
     });
 }

@@ -1,6 +1,5 @@
 package ru.kata.spring.boot_security.demo.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +22,11 @@ import java.util.NoSuchElementException;
 @RequestMapping("/api/admin")
 public class AdminController {
     private final UserService userService;
+    private final RoleService roleService;
 
     public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @GetMapping("/current")
@@ -46,22 +47,24 @@ public class AdminController {
 
     @GetMapping("/roles")
     public ResponseEntity<List<Role> > roles() {
-        return ResponseEntity.ok(userService.getRoles() );
+        return ResponseEntity.ok(roleService.getRoles() );
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<HttpStatus> createUser(@RequestBody User user) {
+    @PostMapping
+    public ResponseEntity<User> createUser(@RequestBody User user) {
        userService.newUser(user);
-       return ResponseEntity.ok(HttpStatus.OK);
+       return ResponseEntity.ok(user);
     }
 
     @PutMapping
-    public void update(@RequestBody User user) {
+    public ResponseEntity<User> update(@RequestBody User user) {
         userService.updateUser(user, user.getId() );
+        return ResponseEntity.ok(user);
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }

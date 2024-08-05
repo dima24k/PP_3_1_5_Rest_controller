@@ -8,6 +8,7 @@ import ru.kata.spring.boot_security.demo.models.User;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,6 +43,15 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public void newUser(User user) {
+        List<Role> attachedRoles = new ArrayList<>();
+
+        for (Role role : user.getRoles() ) {
+            Role attachedRole = entityManager.find(Role.class, role.getId() );
+            attachedRoles.add(attachedRole);
+        }
+
+        user.setRoles(attachedRoles);
+
         entityManager.persist(user);
     }
 
@@ -63,10 +73,5 @@ public class UserDaoImpl implements UserDao {
         Query query = entityManager.createQuery("DELETE FROM User u WHERE u.id = :userId");
         query.setParameter("userId", id);
         query.executeUpdate();
-    }
-
-    @Override
-    public List<Role> getRoles() {
-        return entityManager.createQuery("select r from Role r", Role.class).getResultList();
     }
 }

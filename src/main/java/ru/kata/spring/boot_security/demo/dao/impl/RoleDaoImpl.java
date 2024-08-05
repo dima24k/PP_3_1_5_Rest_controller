@@ -6,6 +6,7 @@ import ru.kata.spring.boot_security.demo.models.Role;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -24,5 +25,10 @@ public class RoleDaoImpl implements RoleDao {
             // handle exception
         }
         return Optional.ofNullable(role);
+    }
+
+    @Override
+    public List<Role> getRoles() {
+        return entityManager.createQuery("select r from Role r", Role.class).getResultList();
     }
 }

@@ -6,6 +6,7 @@ import ru.kata.spring.boot_security.demo.dao.RoleDao;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.services.RoleService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Transactional(readOnly = true)
@@ -20,5 +21,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Optional<Role> findRoleById(long id) {
         return roleDao.findRoleById(id);
+    }
+
+    @Override
+    public List<Role> getRoles() {
+        return roleDao.getRoles();
     }
 }
